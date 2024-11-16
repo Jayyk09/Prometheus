@@ -1,2 +1,2 @@
 .streamlit/secrets.toml
-firebase-credentials.json
+firebase.json
