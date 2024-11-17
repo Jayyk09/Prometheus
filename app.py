@@ -4,7 +4,9 @@ import time
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-st.title('Quizzify')
+st.set_page_config(layout='wide')
+
+st.title("Quizzify - Login")
 
 genai_api = st.secrets["GEMINI_API"]
 sambanova_api = st.secrets["SAMBA_API"]
@@ -24,15 +26,34 @@ db = init_firebase()
 
 username = st.text_input("Enter your username")
 
+# Define available pages
+page = {
+    "Home": "home",
+    "Generate Quiz": "generate_quiz",
+    "Take Quiz": "take_quiz"
+}
+
+# Function to handle page navigation
+def go_to_page(page_name):
+    st.session_state.page = page_name
+
+# # Create a sidebar
+# st.sidebar.title("Navigation")
+# page = st.sidebar.radio("Go to", list(page.keys()))
+
+# Page routing based on the selection
+if page == "Home":
+    go_to_page("home")
+elif page == "Generate Quiz":
+    go_to_page("generate_quiz")
+elif page == "Take Quiz":
+    go_to_page("take_quiz")
+
 if username:
-    # Show the list of videos with the video name that the user has uploaded
-    videos_ref = db.collection("users").document(username).collection("videos")
-    videos = [doc.id for doc in videos_ref.stream()]
-    if videos:
-        st.write("Uploaded videos:")
-        for video in videos:
-            if st.button(video):  # Create a button for each video
-                st.session_state.video_to_show = video  # Store the selected video in session state
-                st.rerun()  # Rerun the app to go to the new page
-    else:
-        st.write("No videos uploaded yet.")
+    st.session_state.username = username
+    st.success(f"Welcome, {username}! Redirecting...")
+    st.success("Successfully logged in! Use the navigation menu to proceed.")
+    st.write("Go to **Home** from the menu.")
+
+else:
+    st.info("Please fill in all fields to proceed.")
