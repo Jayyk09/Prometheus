@@ -162,17 +162,11 @@ with col3:
 with col4:
     difficulty = st.selectbox("Difficulty Level", options=["Easy", "Medium", "Hard"], index=1)
 
-# Generate or fetch quiz
 if st.button("Take Quiz"):
     if analysis:
-        quiz_data = doc_ref.get().to_dict().get("quiz")
-        if not quiz_data:
-            st.write("Generating quiz...")
-            quiz = generate_quiz(analysis, num_questions, difficulty)
-            doc_ref.update({"quiz": quiz})
-        else:
-            st.write("Fetching existing quiz...")
-            quiz = quiz_data
+        with st.spinner("Generating quiz..."):
+            quiz = generate_quiz(analysis, num_questions, difficulty) 
+            doc_ref.update({"quiz": quiz}) # Optionally update the quiz in Firestore
 
         st.session_state.quiz = quiz
         if quiz:
