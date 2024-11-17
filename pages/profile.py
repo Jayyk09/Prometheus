@@ -76,17 +76,19 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("Uploaded Files")
     for video_name,quiz_score,quiz,difficulty, upload_time, _ in videos:
-        st.write(f"📁 **{video_name}**")
-        timestamp = upload_time.timestamp()  # Convert to Unix timestamp
-        formatted_time = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-        st.caption(f"Uploaded on {formatted_time}")
-        if st.button("Generate Quiz", key=video_name):  # Unique key for each button
-            if quiz:
-                st.session_state["quiz"] = quiz
-                st.session_state["uploaded_file_name"] = video_name
-                st.switch_page("pages/Quiz.py")  # Navigate to the quiz page
-            else:
-                st.warning("No quiz data found. Please upload the video and generate a quiz first.")
+        with st.container():
+            st.write(f"📁 **{video_name}**")
+            timestamp = upload_time.timestamp()  # Convert to Unix timestamp
+            formatted_time = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+            st.caption(f"Uploaded on {formatted_time}")
+
+            if st.button("Take Quiz", key=f"quiz_{video_name}"):  # Unique key for each button
+                if quiz:
+                    st.session_state["quiz"] = quiz
+                    st.session_state["uploaded_file_name"] = video_name
+                    st.switch_page("pages/Quiz.py")  # Navigate to the quiz page
+                else:
+                    st.warning("No quiz data found. Please upload the video and generate a quiz first.")
 
 
 # Recent Quizzes Section

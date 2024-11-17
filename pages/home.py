@@ -153,14 +153,14 @@ if uploaded_file:
     if existing_data.exists:
         analysis = existing_data.to_dict().get("analysis")
         st.subheader("Analysis:")
+        st.write(analysis)
     else:
         with st.spinner("Analyzing video..."):
             transcript = generate_transcript(uploaded_file, uploaded_file.name)
             analysis = generate_analysis(transcript)
             st.subheader("Analysis (Generated):")
             doc_ref.set({"analysis": analysis})
-
-    st.write(analysis)
+            st.write(analysis)
 
 # Quiz settings
 st.subheader("Quiz Settings")

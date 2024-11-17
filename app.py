@@ -15,7 +15,7 @@ capitalize_sidebar_style = """
 st.markdown(capitalize_sidebar_style, unsafe_allow_html=True)
 
 
-st.title("Quizzify - Login")
+st.title("Prometheus - Login")
 
 genai_api = st.secrets["GEMINI_API"]
 sambanova_api = st.secrets["SAMBA_API"]
