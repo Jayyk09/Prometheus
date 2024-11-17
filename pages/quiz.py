@@ -1,6 +1,7 @@
 import streamlit as st
 from firebase_admin import firestore
 import time
+import json
 
 if "username" not in st.session_state:
     st.error("Please go back and enter your username.")
@@ -23,8 +24,7 @@ quiz = st.session_state.quiz
 # print(quiz)
 # st.write(quiz)
 
-formatted_quiz = quiz.replace("```json", "").replace("```", "")
-print(formatted_quiz)
+formatted_quiz = json.loads(quiz.replace("```json", "").replace("```", ""))
 
 user_answers = []
 
@@ -69,4 +69,8 @@ if st.button("Submit"):
         st.write(f"Explanation: {entry['explanation']}")
         st.write("-" * 40)
 
-    st.switch_page('pages/results.py')
+
+    #convert the final score in % and upload with value quiz_score
+    quiz_score = (score / len(formatted_quiz['quiz'])) * 100
+    quiz_score_ref = db.collection("users").document(username).collection("videos").document(st.session_state.uploaded_file_name)
+    quiz_score_ref.update({"quiz_score": quiz_score})
