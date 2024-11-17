@@ -9,7 +9,8 @@ st.set_page_config(layout='wide', initial_sidebar_state='collapsed')
 # Get username from session state
 if "username" not in st.session_state:
     st.error("Please go back and enter your username.")
-    st.stop()
+    st.switch_page("app.py")
+
 
 # configure Gemini API
 genai_api_key = st.secrets["GEMINI_API"]
@@ -22,6 +23,9 @@ client = openai.OpenAI(
 )
 
 username = st.session_state.username
+
+st.title("Quizzify")
+st.write("Drop your lectures here to generate quizzes and summaries!")
 
 # Welcome message
 st.header(f"Hello, {username}! 👋")
@@ -91,7 +95,7 @@ def generate_analysis(transcript):
         return f"Error generating analysis: {e}"
 
 # Function to generate quiz
-def generate_quiz(analysis, n =5):
+def generate_quiz(analysis, n =5, difficulty="Medium"):
     """
     This function generates quiz questions using the Gemini Pro 1.5 model based on the analysis of the video.
     Args:
@@ -104,7 +108,7 @@ def generate_quiz(analysis, n =5):
     try:
         # Prepare the request to generate the quiz questions
         prompt = f"""
-        Based on the following analysis, generate {n} quiz questions.
+        Based on the following analysis, generate {n} quiz questions with diffulty level {difficulty}:
         Return the quiz in the following JSON format:
 
         {{
@@ -169,6 +173,7 @@ st.subheader("Upload a File")
 uploaded_file = st.file_uploader("Choose a file", type=["mp4"])
 if uploaded_file:
     st.write(f"File uploaded: {uploaded_file.name}")
+    st.session_state.uploaded_file_name = uploaded_file.name
 
     # Analyze the video
     transcript = generate_transcript(uploaded_file, uploaded_file.name)
@@ -180,14 +185,23 @@ if uploaded_file:
         "analysis": analysis
     })
 
+st.subheader("Quiz Settings")
+col3, col4 = st.columns(2)
+with col3:
+    num_questions = st.slider("Number of Questions", min_value=1, max_value=25, value=10)
+with col4:
+    difficulty = st.selectbox("Difficulty Level", options=["Easy", "Medium", "Hard"], index=1)
+
+
 # Button to generate quiz
-if st.button("Generate Quiz"):
+if st.button("Take Quiz"):
     if analysis:
-        quiz = generate_quiz(analysis)
-        st.subheader("Generated Quiz:")
-        st.write(quiz)
-        doc_ref.update({
-            "quiz": quiz
-        })
+        quiz = generate_quiz(analysis, num_questions, difficulty)
     else:
-        st.error("Please upload and analyze a video first.")
+        quiz = "No analysis found. Please upload a video and generate analysis first."
+    doc_ref.update({
+        "quiz": quiz
+    })
+    st.session_state.quiz = quiz
+    if quiz:
+        st.switch_page("pages/quiz.py")
