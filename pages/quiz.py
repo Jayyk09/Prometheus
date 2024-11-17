@@ -3,6 +3,16 @@ from firebase_admin import firestore
 import time
 import json
 
+capitalize_sidebar_style = """
+    <style>
+    [data-testid="stSidebar"] * {
+        text-transform: capitalize !important;
+    }
+    </style>
+"""
+
+st.markdown(capitalize_sidebar_style, unsafe_allow_html=True)
+
 if "username" not in st.session_state:
     st.error("Please go back and enter your username.")
     st.switch_page("app.py")
@@ -10,7 +20,7 @@ if "username" not in st.session_state:
 # Check if a file has been uploaded
 if "uploaded_file_name" not in st.session_state:
     st.error("Please go back and upload a file.")
-    st.switch_page("pages/home.py")
+    st.switch_page("pages/Home.py")
 
 # Firebase DB setup
 @st.cache_resource
@@ -19,7 +29,7 @@ def get_firestore():
 
 db = get_firestore()
 
-st.title("Quizz")
+st.title("Prometheus Quizz")
 
 # Retrieve username and uploaded file information from session state
 username = st.session_state.get("username", "default_user")  # Use default value if not in session state

@@ -4,8 +4,16 @@ import google.generativeai as genai
 import time
 import openai
 
-# Set Streamlit page configuration
-st.set_page_config(layout='wide', initial_sidebar_state='collapsed')
+capitalize_sidebar_style = """
+    <style>
+    [data-testid="stSidebar"] * {
+        text-transform: capitalize !important;
+    }
+    </style>
+"""
+
+st.markdown(capitalize_sidebar_style, unsafe_allow_html=True)
+
 
 # Check for username in session state
 if "username" not in st.session_state:
@@ -33,7 +41,7 @@ db = get_firestore()
 username = st.session_state.username
 
 # Streamlit UI
-st.title("Quizzify")
+st.title("Prometheus")
 st.write("Drop your lectures here to generate quizzes and summaries!")
 st.header(f"Hello, {username}! 👋")
 
@@ -144,13 +152,13 @@ if uploaded_file:
     existing_data = doc_ref.get()
     if existing_data.exists:
         analysis = existing_data.to_dict().get("analysis")
-        st.subheader("Analysis (Fetched from Firestore):")
+        st.subheader("Analysis:")
     else:
-        st.write("Generating analysis...")
-        transcript = generate_transcript(uploaded_file, uploaded_file.name)
-        analysis = generate_analysis(transcript)
-        st.subheader("Analysis (Generated):")
-        doc_ref.set({"analysis": analysis})
+        with st.spinner("Analyzing video..."):
+            transcript = generate_transcript(uploaded_file, uploaded_file.name)
+            analysis = generate_analysis(transcript)
+            st.subheader("Analysis (Generated):")
+            doc_ref.set({"analysis": analysis})
 
     st.write(analysis)
 
@@ -170,6 +178,6 @@ if st.button("Take Quiz"):
 
         st.session_state.quiz = quiz
         if quiz:
-            st.switch_page("pages/quiz.py")  # Navigate to quiz page
+            st.switch_page("pages/Quiz.py")  # Navigate to quiz page
     else:
         st.error("Please upload and analyze a video first.")

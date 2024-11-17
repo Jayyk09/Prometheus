@@ -4,7 +4,16 @@ import time
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-st.set_page_config(layout='wide')
+capitalize_sidebar_style = """
+    <style>
+    [data-testid="stSidebar"] * {
+        text-transform: capitalize !important;
+    }
+    </style>
+"""
+
+st.markdown(capitalize_sidebar_style, unsafe_allow_html=True)
+
 
 st.title("Quizzify - Login")
 
@@ -29,7 +38,7 @@ username = st.text_input("Enter your username")
 if username:
     st.session_state.username = username
     st.success(f"Welcome, {username}! Please proceed to the home page.")
-    st.switch_page("pages/home.py")
+    st.switch_page("pages/Home.py")
 
 else:
     st.info("Please fill in all fields to proceed.")

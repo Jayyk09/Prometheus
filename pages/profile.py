@@ -2,6 +2,16 @@ import streamlit as st
 from firebase_admin import firestore
 from datetime import datetime
 
+capitalize_sidebar_style = """
+    <style>
+    [data-testid="stSidebar"] * {
+        text-transform: capitalize !important;
+    }
+    </style>
+"""
+
+st.markdown(capitalize_sidebar_style, unsafe_allow_html=True)
+
 if "username" not in st.session_state:
     st.error("Please go back and enter your username.")
     st.switch_page("app.py")
@@ -13,7 +23,7 @@ def get_firestore():
 
 db = get_firestore()
 
-st.title("📘 Quiz Dashboard")
+st.title("Your Prometheus Dashboard")
 username = st.session_state.username
 st.sidebar.title("User Profile")
 st.sidebar.image("mascot.png", width=125)  # Placeholder profile picture
@@ -74,7 +84,7 @@ with col1:
             if quiz:
                 st.session_state["quiz"] = quiz
                 st.session_state["uploaded_file_name"] = video_name
-                st.switch_page("pages/quiz.py")  # Navigate to the quiz page
+                st.switch_page("pages/Quiz.py")  # Navigate to the quiz page
             else:
                 st.warning("No quiz data found. Please upload the video and generate a quiz first.")
 

@@ -1,0 +1,3 @@
+[global]
+hide_streamlit_branding = true
+toolbarMode = "viewer"
