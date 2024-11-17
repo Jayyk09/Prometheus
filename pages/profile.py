@@ -13,32 +13,10 @@ def get_firestore():
 
 db = get_firestore()
 
-# st.title("👤 Profile")
-# st.write("Here is your profile page.")
-# username = st.session_state.username
-# st.write(f"Name: {username}")
-
-# videos_ref = db.collection("users").document(username).collection("videos")
-# videos = [(doc.id, doc.to_dict().get("quiz_score", "Not Taken")) for doc in videos_ref.stream()]  # Fetch video names and quiz scores
-
-# #make it 2 columns
-# col1, col2 = st.columns([3, 1])
-
-# with col1:
-#     st.subheader("Video Name")
-# with col2:
-#     st.subheader("Quiz Score")
-
-# for video_name, quiz_score in videos:
-#     with col1:
-#         st.write(f"🎥 {video_name}")
-#     with col2:
-#         st.write(f"{quiz_score} %")
-
 st.title("📘 Quiz Dashboard")
 username = st.session_state.username
 st.sidebar.title("User Profile")
-st.sidebar.image("https://via.placeholder.com/100", caption=username)  # Placeholder profile picture
+st.sidebar.image("mascot.png", width=125)  # Placeholder profile picture
 st.sidebar.markdown(f"""
 **Email:** {username}@example.com  
 **Role:** Student  

@@ -73,19 +73,57 @@ if st.button("Submit"):
     
     # Display the correct answers and explanations
     if incorrect_answers:
-        st.write("Here's a breakdown of the questions you missed:")
-        for i, entry in incorrect_answers:
-            st.write(f"Q{i+1}: {entry['question_text']}")
-            st.write(f"Your answer: {user_answers[i]}")
-            st.write(f"Correct answer: {entry['correct_option']}")
-            st.write(f"Explanation: {entry['explanation']}")
-            st.write("-" * 40)
-    else:
-        st.write("Congratulations! You answered all questions correctly!")
-    
-    #print the final score
-    st.write(f"Final Score: {score} out of {len(formatted_quiz['quiz'])}")
+        st.write("### Here's a breakdown of the questions you missed:")
 
+        # Scrollable container with custom style
+        container_style = """
+        <style>
+            .card {
+                margin-bottom: 20px;
+                padding: 15px;
+                border: 1px solid #2196F3;
+                border-radius: 10px;
+            }
+            .question-title {
+                font-weight: bold;
+                color: #0D47A1;
+            }
+            .answer {
+                color: #d32f2f;
+            }
+            .correct {
+                color: #388E3C;
+            }
+            .explanation {
+                color: #6A1B9A;
+            }
+        </style>
+        """
+
+        st.markdown(container_style, unsafe_allow_html=True)
+
+        # Content inside the scrollable container
+        st.markdown('<div class="scrollable-container">', unsafe_allow_html=True)
+        for idx, entry in incorrect_answers:
+            question_text = entry["question_text"]
+            correct_option = entry["correct_option"]
+            explanation = entry["explanation"]
+            user_answer = user_answers[idx - 1]  # Map user answer by index (adjusted for 0-based indexing)
+
+            card_html = f"""
+            <div class="card">
+                <p class="question-title">Q{idx}: {question_text}</p>
+                <p><span class="answer">Your answer:</span> {user_answer}</p>
+                <p><span class="correct">Correct answer:</span> {correct_option}</p>
+                <p><span class="explanation">Explanation:</span> {explanation}</p>
+            </div>
+            """
+            st.markdown(card_html, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    else:
+        st.success("Congratulations! You answered all questions correctly!")
+    
     # Store the quiz score in percentage and user answers in Firestore
     doc_ref = db.collection("users").document(username).collection("videos").document(uploaded_file_name)
     doc_ref.update({
