@@ -7,9 +7,9 @@ import openai
 st.set_page_config(layout='wide', initial_sidebar_state='collapsed')
 
 # Get username from session state
-if "username" not in st.session_state:
-    st.error("Please go back and enter your username.")
-    st.stop()
+# if "username" not in st.session_state:
+#     st.error("Please go back and enter your username.")
+#     st.stop()
 
 # configure Gemini API
 genai_api_key = st.secrets["GEMINI_API"]
@@ -21,7 +21,8 @@ client = openai.OpenAI(
     base_url="https://api.sambanova.ai/v1",
 )
 
-username = st.session_state.username
+# username = st.session_state.username
+username = "Butt"
 
 # Welcome message
 st.header(f"Hello, {username}! 👋")
