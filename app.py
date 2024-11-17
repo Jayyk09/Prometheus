@@ -6,15 +6,14 @@ import time
 from streamlit_option_menu import option_menu
 from pages import p_login, p_quiz, p_profile, p_sign_out
 
-import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, initialize_app
 
 #st.set_page_config(layout='wide')
 
 #st.title("Quizzify - Login")
 
 # Page Configuration
-st.set_page_config(page_title="Smart Quiz Generator", layout="wide")
+#st.set_page_config(page_title="Smart Quiz Generator", layout="wide")
 
 # Initialize the current page in session state
 if "current_page" not in st.session_state:
@@ -56,13 +55,15 @@ cred = credentials.Certificate("firebase.json")
 
 # cache the Firebase initialization to avoid reinitializing the app. 
 # subsequent calls will return the cached Firestore client.
+# Firebase Initialization
+# cache the Firebase initialization to avoid reinitializing the app. 
+# subsequent calls will return the cached Firestore client.
+# Firebase DB setup
 @st.cache_resource
-def init_firebase():
-    cred = credentials.Certificate("firebase.json")
-    firebase_admin.initialize_app(cred)
+def get_firestore():
     return firestore.client()
 
-db = init_firebase()
+db = get_firestore()
 
 username = st.text_input("Enter your username")
 

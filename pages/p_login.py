@@ -7,13 +7,9 @@ def login():
 
     # Input Fields for Login
     username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
 
     # Login Button
     if st.button("Login"):
-        if username == "admin" and password == "password":  # Replace with real auth logic
-            st.success("Login successful! Redirecting to the Quiz page...")
-            return True
-        else:
-            st.error("Invalid username or password!")
+        st.success("Login successful! Redirecting to the Quiz page...")
+        return True
     return False
