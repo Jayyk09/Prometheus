@@ -7,6 +7,11 @@ if "username" not in st.session_state:
     st.error("Please go back and enter your username.")
     st.switch_page("app.py")
 
+# Check if a file has been uploaded
+if "uploaded_file_name" not in st.session_state:
+    st.error("Please go back and upload a file.")
+    st.switch_page("pages/home.py")
+
 # Firebase DB setup
 @st.cache_resource
 def get_firestore():
@@ -19,6 +24,9 @@ st.title("Quizz")
 # Retrieve username and uploaded file information from session state
 username = st.session_state.get("username", "default_user")  # Use default value if not in session state
 uploaded_file_name = st.session_state.uploaded_file_name
+
+# write the file name
+st.write(f"Quiz for: {uploaded_file_name}")
 
 quiz = st.session_state.quiz
 formatted_quiz = json.loads(quiz.replace("```json", "").replace("```", ""))
@@ -84,5 +92,3 @@ if st.button("Submit"):
         "quiz_score": round((score / len(formatted_quiz['quiz'])) * 100, 2),
         "time_taken": round(st.session_state.time_difference, 2)
     })
-    
-
